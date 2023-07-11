@@ -1,0 +1,81 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-microservice
+spec:
+  selector:
+    matchLabels:
+      app: auth-microservice
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: auth-microservice
+    spec:
+      containers:
+      - name: auth-microservice
+        image: registry.hub.docker.com/linhhnbkdn/auth-miroservice:1.0
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        command: ["python3", "/auth/manage.py", "runserver"]
+        # command: ["sleep", "infinity"]
+        volumeMounts:
+        - name: rs256
+          mountPath: /RS256
+        ports:
+        - containerPort: 8000
+        envFrom:
+        - configMapRef:
+            name: auth-microservice-configmap
+      volumes:
+      - name: rs256
+        persistentVolumeClaim:
+          claimName: rs256
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+  labels:
+    app: postgres
+spec:
+  selector:
+    matchLabels:
+      app: postgres
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+      - image: postgres:15.3
+        name: postgres
+        ports:
+        - containerPort: 5432
+          name: postgres
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        volumeMounts:
+        - name: postgres-pvc
+          mountPath: /var/lib/postgresql/data
+        env:
+        - name: POSTGRES_USER
+          value: postgres
+        - name: POSTGRES_PASSWORD
+          value: postgres
+        - name: POSTGRES_DB
+          value: auth
+        envFrom:
+        - configMapRef:
+            name: postgres-configmap
+      volumes:
+      - name: postgres-pvc
+        persistentVolumeClaim:
+          claimName: postgres-pvc
