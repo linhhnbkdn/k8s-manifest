@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: auth-microservice
+  annotations:
+    scheduling.k8s.io/v1: low-priority
 spec:
   selector:
     matchLabels:
@@ -18,7 +20,7 @@ spec:
         resources:
           limits:
             memory: "128Mi"
-            cpu: "500m"
+            cpu: "100m"
         command: ["python3", "/auth/manage.py", "runserver"]
         # command: ["sleep", "infinity"]
         volumeMounts:
@@ -34,48 +36,48 @@ spec:
         persistentVolumeClaim:
           claimName: rs256
 
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: postgres
-  labels:
-    app: postgres
-spec:
-  selector:
-    matchLabels:
-      app: postgres
-  strategy:
-    type: Recreate
-  template:
-    metadata:
-      labels:
-        app: postgres
-    spec:
-      containers:
-      - image: postgres:15.3
-        name: postgres
-        ports:
-        - containerPort: 5432
-          name: postgres
-        resources:
-          limits:
-            memory: "128Mi"
-            cpu: "500m"
-        volumeMounts:
-        - name: postgres-pvc
-          mountPath: /var/lib/postgresql/data
-        env:
-        - name: POSTGRES_USER
-          value: postgres
-        - name: POSTGRES_PASSWORD
-          value: postgres
-        - name: POSTGRES_DB
-          value: auth
-        envFrom:
-        - configMapRef:
-            name: postgres-configmap
-      volumes:
-      - name: postgres-pvc
-        persistentVolumeClaim:
-          claimName: postgres-pvc
+# ---
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: postgres
+#   labels:
+#     app: postgres
+# spec:
+#   selector:
+#     matchLabels:
+#       app: postgres
+#   strategy:
+#     type: Recreate
+#   template:
+#     metadata:
+#       labels:
+#         app: postgres
+#     spec:
+#       containers:
+#       - image: postgres:15.3
+#         name: postgres
+#         ports:
+#         - containerPort: 5432
+#           name: postgres
+#         resources:
+#           limits:
+#             memory: "128Mi"
+#             cpu: "500m"
+#         volumeMounts:
+#         - name: postgres-pvc
+#           mountPath: /var/lib/postgresql/data
+#         env:
+#         - name: POSTGRES_USER
+#           value: postgres
+#         - name: POSTGRES_PASSWORD
+#           value: postgres
+#         - name: POSTGRES_DB
+#           value: auth
+#         envFrom:
+#         - configMapRef:
+#             name: postgres-configmap
+#       volumes:
+#       - name: postgres-pvc
+#         persistentVolumeClaim:
+#           claimName: postgres-pvc

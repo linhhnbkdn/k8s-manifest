@@ -4,6 +4,9 @@ resources:
   - deployment.yaml
   - pvc.yaml
   - svc.yaml
+  - statefulset.yaml
+  - namespace.yaml
+  - priorityClassName.yaml
 
 configMapGenerator:
   - name: auth-microservice-configmap
