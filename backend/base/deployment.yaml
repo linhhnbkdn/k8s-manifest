@@ -20,8 +20,8 @@ spec:
         resources:
           limits:
             memory: "128Mi"
-            cpu: "100m"
-        command: ["python3", "/auth/manage.py", "runserver"]
+            cpu: "256m"
+        command: ["python", "/auth/manage.py", "runserver", "0.0.0.0:8000"]
         # command: ["sleep", "infinity"]
         volumeMounts:
         - name: rs256
@@ -35,49 +35,25 @@ spec:
       - name: rs256
         persistentVolumeClaim:
           claimName: rs256
-
-# ---
-# apiVersion: apps/v1
-# kind: Deployment
-# metadata:
-#   name: postgres
-#   labels:
-#     app: postgres
-# spec:
-#   selector:
-#     matchLabels:
-#       app: postgres
-#   strategy:
-#     type: Recreate
-#   template:
-#     metadata:
-#       labels:
-#         app: postgres
-#     spec:
-#       containers:
-#       - image: postgres:15.3
-#         name: postgres
-#         ports:
-#         - containerPort: 5432
-#           name: postgres
-#         resources:
-#           limits:
-#             memory: "128Mi"
-#             cpu: "500m"
-#         volumeMounts:
-#         - name: postgres-pvc
-#           mountPath: /var/lib/postgresql/data
-#         env:
-#         - name: POSTGRES_USER
-#           value: postgres
-#         - name: POSTGRES_PASSWORD
-#           value: postgres
-#         - name: POSTGRES_DB
-#           value: auth
-#         envFrom:
-#         - configMapRef:
-#             name: postgres-configmap
-#       volumes:
-#       - name: postgres-pvc
-#         persistentVolumeClaim:
-#           claimName: postgres-pvc
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: curl
+spec:
+  selector:
+    matchLabels:
+      app: curl
+  template:
+    metadata:
+      labels:
+        app: curl
+    spec:
+      containers:
+      - name: curl
+        image: curlimages/curl:latest
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "100m"
+        command: ["sleep", "infinity"]
