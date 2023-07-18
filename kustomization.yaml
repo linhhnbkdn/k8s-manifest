@@ -4,9 +4,9 @@ kind: Kustomization
 bases:
   - backend/overlays/local
 
-# resources:
-#   - grafana/grafana.yaml
-#   - prometheus/prometheus.yaml
-#   - jaeger/jaeger.yaml
-#   - kiali/kiali.yaml
-#   - namespace.yaml
+resources:
+  - grafana/grafana.yaml
+  - prometheus/prometheus.yaml
+  - jaeger/jaeger.yaml
+  - kiali/kiali.yaml
+  - namespace.yaml

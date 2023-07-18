@@ -1,5 +1,39 @@
 cp_rs256:
 	kubectl cp backend/overlays/local/file/RS256/ $(POD):/RS256 -n $(NAMESPACE)
+clean:
+	kubectl delete -k .
+	kubectl delete namespace backend || true
+	kubectl delete namespace frontend || true
+	kubectl delete namespace istio-system || true
+	kubectl delete namespace istio-operator || true
+	kubectl delete namespace istio-operator || true
+	minikube minikube stop -p li-cluster || true
+
+create-istio-namespace:
+	kubectl delete namespace istio-system || true
+	kubectl create namespace istio-system || true
+
+start-istio-base: create-istio-namespace
+	helm install istio-base istio/base -n istio-system --set defaultRevision=default
+
+start-istio: start-istio-base
+	helm install istiod istio/istiod -n istio-system --wait
+
+up: start-istio
+	kubectl apply -k .
+
+dashboard-kiali:
+	istioctl dashboard kiali
+
+dashboard-jaeger:
+	istioctl dashboard jaeger
+
+dashboard-prometheus:
+	istioctl dashboard prometheus
+
+dashboard-grafana:
+	istioctl dashboard grafana
+
 # Ex: kubectl cp backend/overlays/local/file/RS256 auth-microservice-5cc5df4c7c-v56zx:/RS256 -n backend
 
 
