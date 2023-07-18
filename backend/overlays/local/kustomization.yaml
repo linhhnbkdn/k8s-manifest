@@ -2,7 +2,7 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 commonLabels:
   env: local
-  istio-injection: enabled
+  # istio-injection: enabled
 
 namespace: backend
 
@@ -13,6 +13,12 @@ configMapGenerator:
   - name: auth-microservice-configmap
     envs:
       - file/backend.env
+      - file/auth-microservice.env
+    behavior: merge
+  - name: user-microservice-configmap
+    envs:
+      - file/backend.env
+      - file/user-microservice.env
     behavior: merge
   - name: postgres-configmap
     envs:

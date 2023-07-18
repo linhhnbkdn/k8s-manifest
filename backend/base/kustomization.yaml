@@ -12,6 +12,9 @@ configMapGenerator:
   - name: auth-microservice-configmap
     envs:
       - file/backend.env
+  - name: user-microservice-configmap
+    envs:
+      - file/backend.env
   - name: postgres-configmap
     envs:
       - file/backend.env
