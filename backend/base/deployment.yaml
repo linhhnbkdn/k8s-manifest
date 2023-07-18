@@ -22,8 +22,8 @@ spec:
           limits:
             memory: "128Mi"
             cpu: "256m"
-        # command: ["python", "/auth/manage.py", "runserver", "0.0.0.0:8000"]
-        command: ["sleep", "infinity"]
+        command: ["python", "/auth/manage.py", "runserver", "0.0.0.0:8000"]
+        # command: ["sleep", "infinity"]
         volumeMounts:
         - name: rs256
           mountPath: /RS256
@@ -84,8 +84,8 @@ spec:
           limits:
             memory: "128Mi"
             cpu: "256m"
-        # command: ["python", "/user/manage.py", "runserver", "0.0.0.0:8000"]
-        command: ["sleep", "infinity"]
+        command: ["python", "/user/manage.py", "runserver", "0.0.0.0:8000"]
+        # command: ["sleep", "infinity"]
         volumeMounts:
         - name: rs256
           mountPath: /RS256
