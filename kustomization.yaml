@@ -10,3 +10,5 @@ resources:
   - jaeger/jaeger.yaml
   - kiali/kiali.yaml
   - namespace.yaml
+  - istio.yaml
+  # - ingressIstio.yaml
