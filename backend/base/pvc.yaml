@@ -4,7 +4,7 @@ metadata:
   name: rs256
 spec:
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   resources:
     requests:
       storage: 20Mi
@@ -19,4 +19,4 @@ spec:
       storage: 1Gi
   volumeMode: Filesystem
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany

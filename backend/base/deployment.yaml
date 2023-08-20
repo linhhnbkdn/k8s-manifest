@@ -8,7 +8,7 @@ spec:
   selector:
     matchLabels:
       app: auth-microservice
-  replicas: 1
+  replicas: 2
   template:
     metadata:
       labels:
@@ -70,7 +70,7 @@ spec:
   selector:
     matchLabels:
       app: user-microservice
-  replicas: 1
+  replicas: 2
   template:
     metadata:
       labels:
