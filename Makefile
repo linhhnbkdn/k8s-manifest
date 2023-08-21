@@ -17,7 +17,7 @@ start-istio-base: create-istio-namespace
 	helm install istio-base istio/base -n istio-system --set defaultRevision=default
 
 start-istio: start-istio-base
-	helm install istiod istio/istiod -n istio-system --wait
+	istioctl install --set profile=default -y
 
 up: start-istio
 	kubectl apply -k .
@@ -34,7 +34,7 @@ dashboard-prometheus:
 dashboard-grafana:
 	istioctl dashboard grafana
 
-# Ex: kubectl cp backend/overlays/local/file/RS256 auth-microservice-c8f56d56c-fgbbb:/ -n backend
+# Ex: kubectl cp backend/overlays/local/file/RS256 auth-microservice-c8f56d56c-795v6:/ -n backend
 
 
 # while true; do curl --location 'http://auth-microservice-svc:8000/api/token/' --header 'Content-Type: application/json' --data '{"username": "admin","password": "admin"}'; sleep .5; done
