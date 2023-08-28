@@ -8,7 +8,7 @@ spec:
   selector:
     matchLabels:
       app: auth-microservice
-  replicas: 2
+  replicas: 1
   template:
     metadata:
       labels:
@@ -36,6 +36,7 @@ spec:
       - name: rs256
         persistentVolumeClaim:
           claimName: rs256
+
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -70,7 +71,7 @@ spec:
   selector:
     matchLabels:
       app: user-microservice
-  replicas: 2
+  replicas: 1
   template:
     metadata:
       labels:
@@ -79,6 +80,45 @@ spec:
     spec:
       containers:
       - name: user-microservice
+        image: registry.hub.docker.com/linhhnbkdn/user:1.0.1
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "256m"
+        command: ["python", "/user/manage.py", "runserver", "0.0.0.0:8000"]
+        # command: ["sleep", "infinity"]
+        volumeMounts:
+        - name: rs256
+          mountPath: /RS256
+        ports:
+        - containerPort: 8000
+        envFrom:
+        - configMapRef:
+            name: user-microservice-configmap
+      volumes:
+      - name: rs256
+        persistentVolumeClaim:
+          claimName: rs256
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-microservice-v2
+  # annotations:
+    # scheduling.k8s.io/v1: low-priority
+spec:
+  selector:
+    matchLabels:
+      app: user-microservice-v2
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: user-microservice-v2
+        version: v2
+    spec:
+      containers:
+      - name: user-microservice-v2
         image: registry.hub.docker.com/linhhnbkdn/user:1.0.1
         resources:
           limits:

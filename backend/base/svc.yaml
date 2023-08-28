@@ -42,3 +42,18 @@ spec:
   - port: 8000
     targetPort: 8000
     protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-microservice-v2-svc
+  labels:
+    app: user-microservice-v2-svc
+spec:
+  type: ClusterIP
+  selector:
+    app: user-microservice-v2
+  ports:
+  - port: 8000
+    targetPort: 8000
+    protocol: TCP

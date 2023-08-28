@@ -34,7 +34,7 @@ dashboard-prometheus:
 dashboard-grafana:
 	istioctl dashboard grafana
 
-# Ex: kubectl cp backend/overlays/local/file/RS256 auth-microservice-c8f56d56c-795v6:/ -n backend
+# Ex: kubectl cp backend/overlays/local/file/RS256 auth-microservice-c8f56d56c-2zhnz:/ -n backend
 
 
 # while true; do curl --location 'http://auth-microservice-svc:8000/api/token/' --header 'Content-Type: application/json' --data '{"username": "admin","password": "admin"}'; sleep .5; done

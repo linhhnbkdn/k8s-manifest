@@ -26,6 +26,11 @@ spec:
   gateways:
   - outfitters-gateway
   http:
+    # - fault:
+    #     delay:
+    #       fixedDelay: 7s
+    #       percentage:
+    #         value: 100
     - name: auth
       match:
       - uri:
@@ -34,9 +39,42 @@ spec:
           prefix: /api/token/
       route:
       - destination:
-          host: auth-microservice-svc.backend.svc.cluster.local
+          host: auth-microservice-svc
           port:
             number: 8000
+      # fault:
+      #   delay:
+      #     fixedDelay: 7s
+      #     percentage:
+      #       value: 100
+    # - name: user
+    #   match:
+    #   - uri:
+    #       prefix: /user
+    #   route:
+    #   - destination:
+    #       host: user-microservice-svc
+    #       port:
+    #         number: 8000
+    #     weight: 30
+    #   - destination:
+    #       host: user-microservice-v2-svc
+    #       port:
+    #         number: 8000
+    #     weight: 70
+
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: user-virtualservice
+  namespace: backend
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - outfitters-gateway
+  http:
     - name: user
       match:
       - uri:
@@ -46,3 +84,45 @@ spec:
           host: user-microservice-svc
           port:
             number: 8000
+        weight: 10
+      - destination:
+          host: user-microservice-v2-svc
+          port:
+            number: 8000
+        weight: 90
+---
+# apiVersion: networking.istio.io/v1alpha3
+# kind: DestinationRule
+# metadata:
+#   name: httpbin
+# spec:
+#   host: "*"
+#   trafficPolicy:
+#     connectionPool:
+#       tcp:
+#         maxConnections: 0
+#       http:
+#         http1MaxPendingRequests: 0
+#         http2MaxRequests: 0
+#         maxRequestsPerConnection: 0
+#     outlierDetection:
+#       consecutive5xxErrors: 1
+#       interval: 1s
+#       baseEjectionTime: 3m
+#       maxEjectionPercent: 100
+---
+# kind: DestinationRule
+# apiVersion: networking.istio.io/v1alpha3
+# metadata:
+#   name: auth-microservice-destinationrule
+#   namespace: backend
+# spec:
+#   host: auth-microservice-svc-host
+#   subsets:
+#   - name: v1
+#     labels:
+#       version: v1
+#   - name: v2
+#     labels:
+#       version: v2
+# ---
